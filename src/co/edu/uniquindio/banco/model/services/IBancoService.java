@@ -1,15 +1,16 @@
 package co.edu.uniquindio.banco.model.services;
 
+import co.edu.uniquindio.banco.exceptions.ClienteException;
 import co.edu.uniquindio.banco.exceptions.EmpleadoException;
 import co.edu.uniquindio.banco.model.Cliente;
 import co.edu.uniquindio.banco.model.Empleado;
 
 public interface IBancoService {
 
-	public void crearEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
-			String correo, String fechaNacimiento, String codigo, Double salario) throws EmpleadoException;
+	public Empleado crearEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
+			String correo, String fechaNacimiento, String codigo, Double salario, String cargo) throws EmpleadoException;
 
-	public void actualizarEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
+	public Empleado actualizarEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento, String codigo, Double salario);
 
 	public Boolean eliminarEmpleado(String cedula);
@@ -17,9 +18,9 @@ public interface IBancoService {
 	public Empleado obtenerEmpleado(String cedula);
 
 	public Cliente crearCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
-			String correo, String fechaNacimiento);
+			String correo, String fechaNacimiento) throws ClienteException;
 
-	public void actualizarCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
+	public Cliente actualizarCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento);
 
 	public Boolean eliminarCliente(String cedula);

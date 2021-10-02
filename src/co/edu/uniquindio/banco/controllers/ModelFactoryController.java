@@ -1,9 +1,11 @@
 package co.edu.uniquindio.banco.controllers;
 
+import co.edu.uniquindio.banco.exceptions.ClienteException;
 import co.edu.uniquindio.banco.exceptions.EmpleadoException;
 import co.edu.uniquindio.banco.model.Banco;
 import co.edu.uniquindio.banco.model.Cliente;
 import co.edu.uniquindio.banco.model.Empleado;
+import co.edu.uniquindio.banco.model.Gerente;
 import co.edu.uniquindio.banco.model.services.IModelFactoryService;
 
 public class ModelFactoryController implements IModelFactoryService{
@@ -97,7 +99,7 @@ public class ModelFactoryController implements IModelFactoryService{
 
 		banco.getListaClientes().add(cliente);
 		
-		Empleado empleado = new Empleado();
+		Empleado empleado = new Gerente();
 		empleado.setNombre("Jaime");
 		empleado.setApellido("Arias");
 		empleado.setCedula("12555");
@@ -122,55 +124,51 @@ public class ModelFactoryController implements IModelFactoryService{
 	}
 
 	@Override
-	public String crearEmpleado(String nombre, String apellido, String cedula, String fechaNacimiento, String telefono,
-			String correo, String direccion, String codigo, String salario) {
+	public Empleado crearEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
+			String correo, String fechaNacimiento, String codigo, double salarioEmpleado, String cargo) throws EmpleadoException {
 		
-		String notificacion = "";
+		Empleado empleado = getBanco().crearEmpleado(nombre, apellido, cedula, direccion, telefono, correo, fechaNacimiento, codigo, salarioEmpleado, cargo);
 		
-		try {
-			getBanco().crearEmpleado(nombre, apellido, cedula, direccion, telefono, correo, fechaNacimiento, codigo, Double.valueOf(salario));
-			notificacion = "Empleado creado con éxito";
-		} catch (NumberFormatException e) {
-			notificacion = e.getMessage();
-		} catch (EmpleadoException e) {
-			notificacion = e.getMessage();
-		}
-		
-		return notificacion;
-		
+		return empleado;
 	}
 
 	@Override
-	public Boolean eliminarEmpleado(Empleado empleado) {
-		return getBanco().eliminarEmpleado(empleado.getCedula());
+	public Boolean eliminarEmpleado(String cedula) {
+		return getBanco().eliminarEmpleado(cedula);
 	}
 
 
 	@Override
-	public void actualizarEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
+	public Empleado actualizarEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento, String codigo, Double salario) {
 		
+		Empleado empleado = banco.actualizarEmpleado(nombre, apellido, cedula, direccion, telefono, correo, fechaNacimiento, codigo, salario);
+		return empleado;
 	}
-
-
 
 	@Override
 	public Cliente crearCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
-			String correo, String fechaNacimiento) {
+			String correo, String fechaNacimiento) throws ClienteException {
 		Cliente cliente = banco.crearCliente(nombre, apellido, cedula, direccion, telefono, correo, fechaNacimiento);
 		
 		return cliente;
 	}
 
 	@Override
-	public void actualizarCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
+	public Cliente actualizarCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento) {
 		
+		Cliente cliente = banco.actualizarCliente(nombre, apellido, cedula, direccion, telefono, correo, fechaNacimiento);
+		
+		return cliente;
 	}
 
 	@Override
 	public Boolean eliminarCliente(String cedula) {
-		return null;
+		if(banco.eliminarCliente(cedula)) {
+			return true;
+		}		
+		return false;	
 	}
 
 	@Override

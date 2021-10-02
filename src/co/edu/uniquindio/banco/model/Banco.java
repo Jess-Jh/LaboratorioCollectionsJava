@@ -1,13 +1,13 @@
 package co.edu.uniquindio.banco.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import co.edu.uniquindio.banco.exceptions.ClienteException;
 import co.edu.uniquindio.banco.exceptions.EmpleadoException;
 import co.edu.uniquindio.banco.model.services.IBancoService;
 
@@ -16,7 +16,7 @@ public class Banco implements IBancoService, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	Set<Cliente> listaClientes = new HashSet<>();
-	TreeSet<Empleado> listaEmpleados = new TreeSet<>();
+	Set<Empleado> listaEmpleados = new TreeSet<>();
 	HashMap<String, Cuenta> listaCuentas = new HashMap<>();
 	HashMap<String, Transaccion> listaTransaccionesAsociadas = new HashMap<>();
 		
@@ -28,10 +28,10 @@ public class Banco implements IBancoService, Serializable {
 	public void setListaClientes(Set<Cliente> listaClientes) {
 		this.listaClientes = listaClientes;
 	}
-	public TreeSet<Empleado> getListaEmpleados() {
+	public Set<Empleado> getListaEmpleados() {
 		return listaEmpleados;
 	}
-	public void setListaEmpleados(TreeSet<Empleado> listaEmpleados) {
+	public void setListaEmpleados(Set<Empleado> listaEmpleados) {
 		this.listaEmpleados = listaEmpleados;
 	}
 	public HashMap<String, Cuenta> getListaCuentas() {
@@ -49,22 +49,35 @@ public class Banco implements IBancoService, Serializable {
 
 	@Override
 	public Cliente crearCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
-			String correo, String fechaNacimiento) {
-		Cliente nuevoCliente = new Cliente();
-		nuevoCliente.setNombre(nombre);
-		nuevoCliente.setApellido(apellido);
-		nuevoCliente.setCedula(cedula);
-		nuevoCliente.setDireccion(direccion);
-		nuevoCliente.setTelefono(telefono);
-		nuevoCliente.setCorreo(correo);
-		nuevoCliente.setFechaNacimiento(fechaNacimiento);
+			String correo, String fechaNacimiento) throws ClienteException {
+		
+		if(existeCliente(cedula)) {
+			throw new ClienteException("El cliente con la cédula " + cedula + " ya se encuentra registrado");
+		} else {			
+			Cliente nuevoCliente = new Cliente();
+			nuevoCliente.setNombre(nombre);
+			nuevoCliente.setApellido(apellido);
+			nuevoCliente.setCedula(cedula);
+			nuevoCliente.setDireccion(direccion);
+			nuevoCliente.setTelefono(telefono);
+			nuevoCliente.setCorreo(correo);
+			nuevoCliente.setFechaNacimiento(fechaNacimiento);
+			
+			getListaClientes().add(nuevoCliente);
+			return nuevoCliente;
+		}
+	}
 
-		getListaClientes().add(nuevoCliente);
-		return nuevoCliente;
+	private boolean existeCliente(String cedula) {
+		for(Cliente cliente : listaClientes) {
+			if(cliente.getCedula().equalsIgnoreCase(cedula))
+				return true;
+		}
+		return false;
 	}
 
 	@Override
-	public void actualizarCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
+	public Cliente actualizarCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento) {
 		Cliente cliente = obtenerCliente(cedula);
 
@@ -76,7 +89,10 @@ public class Banco implements IBancoService, Serializable {
 			cliente.setTelefono(telefono);
 			cliente.setCorreo(correo);
 			cliente.setFechaNacimiento(fechaNacimiento);
-		}
+			
+			return cliente;
+		} 
+		return cliente;
 	}
 
 	@Override
@@ -107,32 +123,32 @@ public class Banco implements IBancoService, Serializable {
 	}
 
 	@Override
-	public void crearEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
-			String correo, String fechaNacimiento, String codigo, Double salario) throws EmpleadoException{
+	public Empleado crearEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
+			String correo, String fechaNacimiento, String codigo, Double salario, String cargo) throws EmpleadoException{
 
-		Empleado nuevoEmpleado =  null;
-		Empleado empleadoExistente = obtenerEmpleado(cedula);
+		Empleado nuevoEmpleado = null;
 		
-		if(empleadoExistente != null)
-			throw new EmpleadoException("El empleado con c�dula "+cedula+" no se puede crear. Ya existe");
-		else {
-			nuevoEmpleado = new Empleado();
-			nuevoEmpleado.setNombre(nombre);
-			nuevoEmpleado.setApellido(apellido);
-			nuevoEmpleado.setCedula(cedula);
-			nuevoEmpleado.setDireccion(direccion);
-			nuevoEmpleado.setTelefono(telefono);
-			nuevoEmpleado.setCorreo(correo);
-			nuevoEmpleado.setFechaNacimiento(fechaNacimiento);
-			nuevoEmpleado.setCodigo(codigo);
-			nuevoEmpleado.setSalario(salario);
+		if(cargo.equalsIgnoreCase("Gerente")) nuevoEmpleado = new Gerente();
+		if(cargo.equalsIgnoreCase("Cajero")) nuevoEmpleado = new Cajero();
+		if(cargo.equalsIgnoreCase("AsesorVentas")) nuevoEmpleado = new AsesorVentas();
+		
+		nuevoEmpleado.setNombre(nombre);
+		nuevoEmpleado.setApellido(apellido);
+		nuevoEmpleado.setCedula(cedula);
+		nuevoEmpleado.setDireccion(direccion);
+		nuevoEmpleado.setTelefono(telefono);
+		nuevoEmpleado.setCorreo(correo);
+		nuevoEmpleado.setFechaNacimiento(fechaNacimiento);
+		nuevoEmpleado.setCodigo(codigo);
+		nuevoEmpleado.setSalario(salario);
 
-			getListaEmpleados().add(nuevoEmpleado);
-		}
+		getListaEmpleados().add(nuevoEmpleado);
+	
+		return nuevoEmpleado;
 	}
 
 	@Override
-	public void actualizarEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
+	public Empleado actualizarEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento, String codigo, Double salario) {
 
 		Empleado empleado = obtenerEmpleado(cedula);
@@ -148,6 +164,7 @@ public class Banco implements IBancoService, Serializable {
 			empleado.setCodigo(codigo);
 			empleado.setSalario(salario);
 		}
+		return empleado;
 	}
 
 	@Override

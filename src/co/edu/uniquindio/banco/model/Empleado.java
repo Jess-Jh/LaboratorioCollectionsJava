@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Empleado extends Persona implements Comparable<Empleado>, Serializable{
+public abstract class Empleado extends Persona implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private Double salario;
@@ -32,8 +32,4 @@ public class Empleado extends Persona implements Comparable<Empleado>, Serializa
 		this.listaClientesAsociados = listaClientesAsociados;
 	}
 
-	@Override
-	public int compareTo(Empleado empleado) {
-		return this.getCedula().compareTo(empleado.getCedula());
-	}
 }

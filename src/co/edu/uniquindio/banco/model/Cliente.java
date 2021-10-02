@@ -3,13 +3,18 @@ package co.edu.uniquindio.banco.model;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class Cliente extends Persona implements Serializable, Comparable<Cliente>{
+public class Cliente extends Persona implements Serializable, Comparable<Cliente> {
 
 	private static final long serialVersionUID = 1L;
 	private Empleado empleadoAsociado;
 	private HashMap<String, Cuenta> listaCuentasCliente = new HashMap<>();
 
 	public Cliente() {}
+	
+	
+	
+
+
 
 	public Empleado getEmpleadoAsociado() {
 		return empleadoAsociado;
@@ -26,6 +31,6 @@ public class Cliente extends Persona implements Serializable, Comparable<Cliente
 
 	@Override
 	public int compareTo(Cliente c) {
-		return this.getNombre().compareToIgnoreCase(c.getNombre());
+		return this.getCedula().compareTo(c.getCedula());
 	}
 }

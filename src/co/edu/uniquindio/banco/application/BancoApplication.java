@@ -3,6 +3,7 @@ package co.edu.uniquindio.banco.application;
 import java.io.IOException;
 
 import co.edu.uniquindio.banco.controllers.ClienteController;
+import co.edu.uniquindio.banco.controllers.EmpleadoController;
 import co.edu.uniquindio.banco.controllers.ModelFactoryController;
 import co.edu.uniquindio.banco.model.Banco;
 import javafx.application.Application;
@@ -46,6 +47,27 @@ public class BancoApplication extends Application {
 	 * Cargar los archivos de la vista principal
 	 */
 	public void mostrarVentanaPrincipal() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(BancoApplication.class.getResource("/co/edu/uniquindio/banco/views/EmpleadoView.fxml"));
+			AnchorPane anchorPane = (AnchorPane)loader.load();
+			EmpleadoController empleadoController = loader.getController();
+			empleadoController.setAplicacion(this);
+			
+			dialogStage = new Stage();
+			dialogStage.setTitle("Empleado");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			
+			Scene scene = new Scene(anchorPane);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void mostrarClienteView() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(BancoApplication.class.getResource("/co/edu/uniquindio/banco/views/ClienteView.fxml"));

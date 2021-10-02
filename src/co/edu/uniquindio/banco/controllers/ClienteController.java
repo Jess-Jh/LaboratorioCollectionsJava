@@ -3,6 +3,8 @@ package co.edu.uniquindio.banco.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.swing.JOptionPane;
+
 import co.edu.uniquindio.banco.application.BancoApplication;
 import co.edu.uniquindio.banco.exceptions.ClienteException;
 import co.edu.uniquindio.banco.exceptions.DatosInvalidosException;
@@ -158,7 +160,7 @@ public class ClienteController implements Initializable {
 			if(cliente != null) listadoClientes.add(0, cliente);
 			tableViewClientes.refresh();
 			
-		} catch(DatosInvalidosException e) {
+		} catch(DatosInvalidosException | ClienteException e) {
 			bancoApplication.mostrarMensaje("Notificación Registro de Cliente", "Información registro cliente inválida", e.getMessage(), AlertType.WARNING);			
 		}
 	}
@@ -197,12 +199,54 @@ public class ClienteController implements Initializable {
 
 	@FXML
     void actualizarCliente(ActionEvent event) {
-
+		if(clienteSeleccion != null) {
+			actualizarCliente(txtNombre.getText(), txtApellidos.getText(), txtCedula.getText(), txtDireccion.getText(), txtTelefono.getText(), txtCorreo.getText(), txtFechaDeNacimiento.getText());			
+		} else {
+			bancoApplication.mostrarMensaje("Actualización Cliente", "Actualización Cliente", "No se ha seleccionado ningún cliente", AlertType.WARNING);
+		}
     }
 
+    private void actualizarCliente(String nombre, String apellidos, String cedula, String direccion, String telefono, String correo,
+			String fechaDeNacimiento) {
+    	try {
+			verificarDatos(nombre, apellidos, cedula, direccion, telefono, correo, fechaDeNacimiento);
+			Cliente cliente = modelFactoryController.actualizarCliente(nombre, apellidos, cedula, direccion, telefono, correo, fechaDeNacimiento);
 
-    @FXML
+			clienteSeleccion.setNombre(nombre);
+			clienteSeleccion.setApellido(apellidos);
+			clienteSeleccion.setCedula(cedula);
+			clienteSeleccion.setDireccion(direccion);
+			clienteSeleccion.setTelefono(telefono);
+			clienteSeleccion.setCorreo(correo);
+			clienteSeleccion.setFechaNacimiento(fechaDeNacimiento);
+	
+			tableViewClientes.refresh();		
+			bancoApplication.mostrarMensaje("Notificación Actualización Cliente", "Actualización Cliente", "El cliente " + cliente.getNombre() + " " + cliente.getApellido() 
+											   + " se ha actualizado con éxito", AlertType.CONFIRMATION);	
+		} catch (DatosInvalidosException e) {
+			bancoApplication.mostrarMensaje("Notificación Actualización Cliente", "Actualización Cliente", e.getMessage(), AlertType.WARNING);
+		}
+	}
+
+	@FXML
     void eliminarCliente(ActionEvent event) {
+		if(clienteSeleccion != null) {
+			
+			//Confirmar que el usuario si quiere eliminar el cliente
+			int mensajeDeConfirmacion = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el cliente " + clienteSeleccion.getNombre() + " ?");
+			
+			if(mensajeDeConfirmacion == 0) {
+				modelFactoryController.eliminarCliente(clienteSeleccion.getCedula());
+	    		bancoApplication.mostrarMensaje("Notificación eliminación cliente", "Eliminación Cliente", "Se ha eliminado el cliente", AlertType.CONFIRMATION);
+	    		
+	    		listadoClientes.remove(clienteSeleccion);
+	    		tableViewClientes.refresh();
+			} else {
+				bancoApplication.mostrarMensaje("Notificación eliminación cliente", "Eliminación Cliente", "No se ha eliminado el cliente", AlertType.WARNING);    			
+			}
+		} else {
+			bancoApplication.mostrarMensaje("Notificación eliminación cliente", "Eliminación Cliente", "No se ha seleccionado ninguna cliente", AlertType.WARNING);
+		}
 
     }
 
