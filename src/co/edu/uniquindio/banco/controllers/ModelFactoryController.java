@@ -287,19 +287,5 @@ public class ModelFactoryController implements IModelFactoryService{
 	public Empleado obtenerEmpleado(String cedula) {
 		return null;
 	}
-
-
-
-
-	
-
-
-
-
-
-	
-	
-	
-	
 	
 }

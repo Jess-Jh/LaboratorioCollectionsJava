@@ -29,6 +29,8 @@ import co.edu.uniquindio.banco.exceptions.DatosInvalidosException;
 import co.edu.uniquindio.banco.exceptions.SaldoInsuficienteException;
 import co.edu.uniquindio.banco.model.Banco;
 import co.edu.uniquindio.banco.model.Cuenta;
+import co.edu.uniquindio.banco.model.EstadoTransaccion;
+import co.edu.uniquindio.banco.model.TipoTransaccion;
 import co.edu.uniquindio.banco.model.Transaccion;
 
 public class TransaccionController implements Initializable {
@@ -180,7 +182,12 @@ public class TransaccionController implements Initializable {
 							transaccionRetiro = modelFactoryController.RetirarDineroCuenta(dineroRetiro, numeroCuentaBancaria, numeroCedulaTransaccion);
 							listadoTransacciones.add(0, transaccionRetiro);   
 							limpiarCampos();
-							bancoAplicacion.mostrarMensaje("Notificación Transacción", "Retiro de Dinero", "Se ha realizado su transacción con éxito", AlertType.INFORMATION);						
+							
+							if(transaccionRetiro.getEstado() == EstadoTransaccion.SIN_FONDOS)
+								bancoAplicacion.mostrarMensaje("Notificación Transacción", "Retiro de Dinero", "No cuenta con el dinero suficiente para realizar esta transacción", AlertType.INFORMATION);
+							else
+								bancoAplicacion.mostrarMensaje("Notificación Transacción", "Retiro de Dinero", "Se ha realizado su transacción con éxito", AlertType.INFORMATION);						
+							
 						} else {
 							bancoAplicacion.mostrarMensaje("Notificación Transacción", "Retiro de Dinero", "No se ha realizado el retiro del dinero", AlertType.INFORMATION);						
 						}

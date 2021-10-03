@@ -119,27 +119,6 @@ public class ClienteController implements Initializable {
 
     @FXML
     private TableColumn<Cuenta, String> columnSaldo;
-    
-    @FXML
-    private TableView<Transaccion> tableViewTransacciones;
-
-    @FXML
-    private TableColumn<Transaccion, String> columnValor;
-
-    @FXML
-    private TableColumn<Transaccion, String> columnHora;
-
-    @FXML
-    private TableColumn<Transaccion, String> columnFecha;
-
-    @FXML
-    private TableColumn<Transaccion, String> columnTipoTransaccion;
-
-    @FXML
-    private TableColumn<Transaccion, String> columnEstadoTransaccion;
-
-    @FXML
-    private Button btnCerrar;
 
     @FXML
     private Button btnEliminarCuenta;
@@ -171,10 +150,7 @@ public class ClienteController implements Initializable {
         
     ObservableList<Cliente> listadoClientes = FXCollections.observableArrayList();
 
-    ObservableList<Cuenta> listadoCuentas = FXCollections.observableArrayList();
-    
-    ObservableList<Transaccion> listadoTransacciones = FXCollections.observableArrayList();
-    
+    ObservableList<Cuenta> listadoCuentas = FXCollections.observableArrayList();    
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -187,13 +163,6 @@ public class ClienteController implements Initializable {
 		//--------------------- Valores Columnas Cuenta ---------------------------------||
 		this.columnNumeroCuenta.setCellValueFactory(new PropertyValueFactory<>("numeroCuenta"));
 		this.columnSaldo.setCellValueFactory(new PropertyValueFactory<>("saldo"));		
-		
-		//--------------------- Valores Columnas Transacciones ---------------------------------||
-    	this.columnValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
-    	this.columnHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
-    	this.columnFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-    	this.columnTipoTransaccion.setCellValueFactory(new PropertyValueFactory<>("tipoTransaccion"));
-    	this.columnEstadoTransaccion.setCellValueFactory(new PropertyValueFactory<>("estado"));
 		
 		//Obtener selección de la tabla clientes
 		tableViewClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldSeletion, newSelection) -> {
@@ -238,9 +207,6 @@ public class ClienteController implements Initializable {
 			if(cuentaSeleccion instanceof CuentaAhorro) cmbTipoCuenta.setValue("Cuenta de Ahorro");
 			if(cuentaSeleccion instanceof CuentaCorriente) cmbTipoCuenta.setValue("Cuenta Corriente");	
 			cmbTipoCuenta.setDisable(true);
-			
-			tableViewTransacciones.getItems().clear();
-			tableViewTransacciones.setItems(getTransacciones());
 		}
 	}
 	
@@ -253,11 +219,6 @@ public class ClienteController implements Initializable {
 		
 		tableViewCuentas.getItems().clear();
 		tableViewCuentas.setItems(getCuentas());
-		
-		if(cuentaSeleccion != null) {
-			tableViewTransacciones.getItems().clear();
-			tableViewTransacciones.setItems(getTransacciones());			
-		}
 	}
 	
     private ObservableList<Cliente> getClientes() {
@@ -271,15 +232,6 @@ public class ClienteController implements Initializable {
 		listadoCuentas.addAll(listaCuentas); 
 
 		return listadoCuentas;
-	}
-    
-    private ObservableList<Transaccion> getTransacciones() {
-    	
-		HashMap<String, Transaccion> lista = cuentaSeleccion.getListaTransacciones();
-    	List<Transaccion> listaTransacciones = lista.values().stream().collect(Collectors.toList());
-		listadoTransacciones.addAll(listaTransacciones); 
-		
-		return listadoTransacciones;
 	}
 
     //--------------------------------------------------------- CRUD Cliente ------------------------------------------------------------------------------------------------->>
@@ -393,6 +345,7 @@ public class ClienteController implements Initializable {
 		txtNombre.setText("");
 		txtApellidos.setText("");
 		txtCedula.setText("");
+		txtCedula.setDisable(false);
 		txtDireccion.setText("");
 		txtTelefono.setText("");
 		txtCorreo.setText("");
@@ -521,11 +474,5 @@ public class ClienteController implements Initializable {
 		nuevaCuenta();
     }
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||
-	
-    @FXML
-    void cerrarTransaccion(ActionEvent event) {
-    	System.exit(0);
-    }
-
 
 }
