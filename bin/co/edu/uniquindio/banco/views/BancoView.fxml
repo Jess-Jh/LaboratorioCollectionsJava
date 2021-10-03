@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="435.0" prefWidth="464.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="co.edu.uniquindio.banco.controllers.BancoController">
+   <children>
+      <AnchorPane prefHeight="435.0" prefWidth="467.0">
+         <children>
+            <Label layoutX="138.0" layoutY="50.0" text="Gestión del Banco">
+               <font>
+                  <Font name="System Bold" size="23.0" />
+               </font>
+            </Label>
+            <Label layoutX="62.0" layoutY="135.0" text="Registro Nuevo Cliente ">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="62.0" layoutY="199.0" text="Registro Nuevo Empleado">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="65.0" layoutY="262.0" text="Registro Transacción">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnRegistrar" layoutX="97.0" layoutY="339.0" mnemonicParsing="false" onAction="#registrar" prefHeight="25.0" prefWidth="276.0" text="Registrar">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <RadioButton fx:id="rdBtnRegistrarCliente" layoutX="356.0" layoutY="137.0" mnemonicParsing="false">
+               <toggleGroup>
+                  <ToggleGroup fx:id="tipoRegistro" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="rdBtnRegistrarEmpleado" layoutX="356.0" layoutY="201.0" mnemonicParsing="false" toggleGroup="$tipoRegistro" />
+            <RadioButton fx:id="rdBtnRegistrarTransaccion" layoutX="356.0" layoutY="264.0" mnemonicParsing="false" toggleGroup="$tipoRegistro" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

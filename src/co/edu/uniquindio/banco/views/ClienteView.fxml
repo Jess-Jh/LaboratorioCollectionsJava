@@ -117,6 +117,29 @@
                      </children></AnchorPane>
             </content>
           </Tab>
+            <Tab text="Transacciones">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="246.0" layoutY="11.0" text="Registro Transacciones">
+                           <font>
+                              <Font name="System Bold" size="19.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="tableViewTransacciones" layoutX="6.0" layoutY="42.0" prefHeight="419.0" prefWidth="685.0">
+                           <columns>
+                              <TableColumn fx:id="columnValor" prefWidth="88.0" text="Valor" />
+                              <TableColumn fx:id="columnHora" prefWidth="95.0" text="Hora" />
+                              <TableColumn fx:id="columnFecha" prefWidth="131.0" text="Fecha" />
+                              <TableColumn fx:id="columnTipoTransaccion" prefWidth="173.0" text="Tipo de Transacción" />
+                              <TableColumn fx:id="columnEstadoTransaccion" prefWidth="197.0" text="Estado de la Transacción" />
+                           </columns>
+                        </TableView>
+                        <Button fx:id="btnCerrar" layoutX="207.0" layoutY="476.0" mnemonicParsing="false" onAction="#cerrarTransaccion" prefHeight="25.0" prefWidth="267.0" text="Cerrar " />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>

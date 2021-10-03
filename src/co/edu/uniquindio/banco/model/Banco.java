@@ -232,7 +232,7 @@ public class Banco implements IBancoService, Serializable {
 	}
 	
 	private boolean validarNumeroCuenta(String numeroCuenta) throws CuentaException {
-		for( Iterator it = listaCuentas.keySet().iterator(); it.hasNext();) { 
+		for( Iterator<String> it = listaCuentas.keySet().iterator(); it.hasNext();) { 
 			String clave = (String)it.next();
 			
 			if(clave.equalsIgnoreCase(numeroCuenta)) throw new CuentaException("El número de la cuenta " + numeroCuenta + " ya se encuentra registrada");
@@ -261,7 +261,7 @@ public class Banco implements IBancoService, Serializable {
 	private Cuenta obtenerCuenta(String numeroCuenta) {
 		Cuenta cuenta = null;
 		
-		for( Iterator it = listaCuentas.keySet().iterator(); it.hasNext();) { 
+		for( Iterator<String> it = listaCuentas.keySet().iterator(); it.hasNext();) { 
 			String clave = (String)it.next();
 			cuenta = listaCuentas.get(clave);
 			if(cuenta.getNumeroCuenta().equalsIgnoreCase(numeroCuenta)) return cuenta;
@@ -336,37 +336,6 @@ public class Banco implements IBancoService, Serializable {
 		return cuentaCliente;
 	}
 
-	class Comparacion implements Comparator{
 
-		@Override
-		public int compare(Object arg0, Object arg1) {
-			
-			Cliente c1 = (Cliente) arg0;
-			Cliente c2 = (Cliente) arg1;
-			int resultado = c1.getCedula().compareTo(c2.getCedula());
-			return resultado;
-		}
-	}
-	
-	class Comparacion2 implements Comparator{
-
-		@Override
-		public int compare(Object arg0, Object arg1) {
-			
-			Cliente c1 = (Cliente) arg0;
-			Cliente c2 = (Cliente) arg1;
-			int resultado = c1.getTelefono().compareTo(c2.getTelefono());
-			return resultado;
-		}
-	}
-
-
-
-
-
-
-
-
-	
 
 }
