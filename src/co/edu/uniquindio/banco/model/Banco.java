@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
 import co.edu.uniquindio.banco.exceptions.ClienteException;
+import co.edu.uniquindio.banco.exceptions.CuentaException;
 import co.edu.uniquindio.banco.exceptions.EmpleadoException;
 import co.edu.uniquindio.banco.model.services.IBancoService;
 
@@ -47,6 +49,7 @@ public class Banco implements IBancoService, Serializable {
 		this.listaTransaccionesAsociadas = listaTransaccionesAsociadas;
 	}
 
+	//--------------------------------------------------- CRUD Cliente ------------------------------------------------------------------------------------->>
 	@Override
 	public Cliente crearCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento) throws ClienteException {
@@ -121,7 +124,9 @@ public class Banco implements IBancoService, Serializable {
 		}
 		return clienteEncontrado;
 	}
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------||
 
+	//--------------------------------------------------- CRUD Empleado ------------------------------------------------------------------------------------->>
 	@Override
 	public Empleado crearEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento, String codigo, Double salario, String cargo) throws EmpleadoException{
@@ -148,8 +153,8 @@ public class Banco implements IBancoService, Serializable {
 	}
 
 	@Override
-	public Empleado actualizarEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
-			String correo, String fechaNacimiento, String codigo, Double salario) {
+	public Empleado actualizarEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono, String correo, 
+											String fechaNacimiento, String codigo, Double salario) {
 
 		Empleado empleado = obtenerEmpleado(cedula);
 
@@ -193,6 +198,79 @@ public class Banco implements IBancoService, Serializable {
 		}
 		return empleadoEncontrado;
 	}
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------||
+
+	//--------------------------------------------------- CRUD Cuenta ------------------------------------------------------------------------------------->>
+	@Override
+	public Cuenta crearCuenta(String numeroCuenta, double saldoCliente, String clienteAsociado, String tipoCuenta) throws ClienteException, CuentaException {
+		Cliente cliente = obtenerCliente(clienteAsociado);
+		Cuenta nuevaCuenta = null;
+		
+		if(cliente == null)
+			throw new ClienteException("El cliente con la cédula " + clienteAsociado + " no se encuentra registrado");
+		else if(validarNumeroCuenta(numeroCuenta)) {
+			if(tipoCuenta.equalsIgnoreCase("Cuenta de Ahorro")) nuevaCuenta = new CuentaAhorro();
+			if(tipoCuenta.equalsIgnoreCase("Cuenta Corriente")) nuevaCuenta = new CuentaCorriente();
+			
+			nuevaCuenta.setNumeroCuenta(numeroCuenta);
+			nuevaCuenta.setSaldo(saldoCliente);
+			nuevaCuenta.setClienteAsociado(cliente);
+			
+			getListaCuentas().put(numeroCuenta, nuevaCuenta);	
+		}
+		
+		return nuevaCuenta;
+	}
+	
+	private boolean validarNumeroCuenta(String numeroCuenta) throws CuentaException {
+		for( Iterator it = listaCuentas.keySet().iterator(); it.hasNext();) { 
+			String clave = (String)it.next();
+			
+			if(clave.equalsIgnoreCase(numeroCuenta)) throw new CuentaException("El número de la cuenta " + numeroCuenta + " ya se encuentra registrada");
+		}
+		return true;
+	}
+	
+	@Override
+	public Cuenta actualizarCuenta(String numeroCuenta, double saldoCliente, String clienteAsociado, String tipoCuenta) throws ClienteException, CuentaException {
+		
+		Cliente cliente = obtenerCliente(clienteAsociado);
+		Cuenta cuenta = obtenerCuenta(numeroCuenta);
+		
+		if(cliente == null)
+			throw new ClienteException("El cliente con la cédula " + clienteAsociado + " no se encuentra registrado");
+		else if(cuenta == null)
+			throw new CuentaException("La cuenta con el número " + numeroCuenta + " no se encuentra registrada");
+		{
+			cuenta.setNumeroCuenta(numeroCuenta);
+			cuenta.setClienteAsociado(cliente);
+			cuenta.setSaldo(saldoCliente);
+		}
+		return cuenta;
+	}
+
+	private Cuenta obtenerCuenta(String numeroCuenta) {
+		Cuenta cuenta = null;
+		
+		for( Iterator it = listaCuentas.keySet().iterator(); it.hasNext();) { 
+			String clave = (String)it.next();
+			cuenta = listaCuentas.get(clave);
+			if(cuenta.getNumeroCuenta().equalsIgnoreCase(numeroCuenta)) return cuenta;
+		}
+		return cuenta;
+	}
+	
+	@Override
+	public boolean eliminarCuenta(String numeroCuenta) {
+		Boolean flagEliminado = false;
+		Cuenta cuenta = obtenerCuenta(numeroCuenta);
+
+		if (cuenta != null) {
+			getListaCuentas().remove(cuenta);
+			flagEliminado = true;
+		}
+		return flagEliminado;
+	}
 
 	@Override
 	public void DepositarDineroCuenta(Integer numeroCuenta) {
@@ -232,7 +310,12 @@ public class Banco implements IBancoService, Serializable {
 			return resultado;
 		}
 	}
-	
+
+
+
+
+
+
 	
 
 }

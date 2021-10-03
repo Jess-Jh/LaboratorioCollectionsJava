@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import co.edu.uniquindio.banco.model.services.ICuentaService;
 
-public class Cuenta implements ICuentaService , Serializable{
+public abstract class Cuenta implements ICuentaService , Serializable{
 
 	private static final long serialVersionUID = 1L;
 	

@@ -1,9 +1,14 @@
 package co.edu.uniquindio.banco.controllers;
 
 import co.edu.uniquindio.banco.exceptions.ClienteException;
+import co.edu.uniquindio.banco.exceptions.CuentaException;
 import co.edu.uniquindio.banco.exceptions.EmpleadoException;
+import co.edu.uniquindio.banco.model.AsesorVentas;
 import co.edu.uniquindio.banco.model.Banco;
 import co.edu.uniquindio.banco.model.Cliente;
+import co.edu.uniquindio.banco.model.Cuenta;
+import co.edu.uniquindio.banco.model.CuentaAhorro;
+import co.edu.uniquindio.banco.model.CuentaCorriente;
 import co.edu.uniquindio.banco.model.Empleado;
 import co.edu.uniquindio.banco.model.Gerente;
 import co.edu.uniquindio.banco.model.services.IModelFactoryService;
@@ -31,7 +36,7 @@ public class ModelFactoryController implements IModelFactoryService{
 	private void inicializarDatos() {
 
 		banco = new Banco();
-		
+		Cuenta cuenta = new CuentaAhorro();
 		
 		Cliente cliente = new Cliente();
 		cliente.setNombre("juan");
@@ -66,6 +71,13 @@ public class ModelFactoryController implements IModelFactoryService{
 
 		banco.getListaClientes().add(cliente);
 		
+		cuenta = new CuentaCorriente();
+		cuenta.setNumeroCuenta("12345678");
+		cuenta.setSaldo(3000000.0);
+		cuenta.setClienteAsociado(cliente);
+		
+		banco.getListaCuentas().put(cuenta.getNumeroCuenta(), cuenta);
+		
 		cliente = new Cliente();
 		cliente.setNombre("juan");
 		cliente.setApellido("arias");
@@ -76,6 +88,13 @@ public class ModelFactoryController implements IModelFactoryService{
 		cliente.setTelefono("125444");
 
 		banco.getListaClientes().add(cliente);
+		
+		cuenta = new CuentaAhorro();
+		cuenta.setNumeroCuenta("34567890");
+		cuenta.setSaldo(2000000.0);
+		cuenta.setClienteAsociado(cliente);
+		
+		banco.getListaCuentas().put(cuenta.getNumeroCuenta(), cuenta);
 
 		cliente = new Cliente();
 		cliente.setNombre("juan");
@@ -85,8 +104,15 @@ public class ModelFactoryController implements IModelFactoryService{
 		cliente.setCorreo("uni2@");
 		cliente.setFechaNacimiento("12454");
 		cliente.setTelefono("125444");
-
+		
 		banco.getListaClientes().add(cliente);
+
+		cuenta = new CuentaCorriente();
+		cuenta.setNumeroCuenta("67890123");
+		cuenta.setSaldo(2500000.0);
+		cuenta.setClienteAsociado(cliente);
+		
+		banco.getListaCuentas().put(cuenta.getNumeroCuenta(), cuenta);
 		
 		cliente = new Cliente();
 		cliente.setNombre("Alberto");
@@ -111,8 +137,27 @@ public class ModelFactoryController implements IModelFactoryService{
 		empleado.setSalario(1000000.0);	
 		
 		banco.getListaEmpleados().add(empleado);
-
 		
+		empleado = new AsesorVentas();
+		empleado.setNombre("Luisa");
+		empleado.setApellido("Martinez");
+		empleado.setCedula("145678");
+		empleado.setDireccion("Armenia");
+		empleado.setCorreo("lui3@gmail");
+		empleado.setFechaNacimiento("13453454");
+		empleado.setTelefono("3234234");
+		empleado.setCodigo("em-001");
+		empleado.setSalario(1000000.0);	
+		
+		banco.getListaEmpleados().add(empleado);
+		
+		cuenta = new CuentaCorriente();
+		cuenta.setNumeroCuenta("9872748");
+		cuenta.setSaldo(8000000.0);
+		cuenta.setClienteAsociado(cliente);
+		
+		banco.getListaCuentas().put(cuenta.getNumeroCuenta(), cuenta);
+	
 	}
 
 	public Banco getBanco() {
@@ -123,6 +168,7 @@ public class ModelFactoryController implements IModelFactoryService{
 		this.banco = banco;
 	}
 
+	//--------------------------------------------------- CRUD Empleado ------------------------------------------------------------------------------------->>
 	@Override
 	public Empleado crearEmpleado(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento, String codigo, double salarioEmpleado, String cargo) throws EmpleadoException {
@@ -145,7 +191,10 @@ public class ModelFactoryController implements IModelFactoryService{
 		Empleado empleado = banco.actualizarEmpleado(nombre, apellido, cedula, direccion, telefono, correo, fechaNacimiento, codigo, salario);
 		return empleado;
 	}
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------||
 
+	//--------------------------------------------------- CRUD Cliente ------------------------------------------------------------------------------------->>
+	
 	@Override
 	public Cliente crearCliente(String nombre, String apellido, String cedula, String direccion, String telefono,
 			String correo, String fechaNacimiento) throws ClienteException {
@@ -175,6 +224,32 @@ public class ModelFactoryController implements IModelFactoryService{
 	public Cliente obtenerCliente(String cedula) {
 		return null;
 	}
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------||
+
+	//--------------------------------------------------- CRUD Cuenta ------------------------------------------------------------------------------------->>
+	@Override
+	public Cuenta crearCuenta(String numeroCuenta, double saldoCliente, String clienteAsociado, String tipoCuenta) throws ClienteException, CuentaException {
+		
+		Cuenta cuenta = banco.crearCuenta(numeroCuenta, saldoCliente, clienteAsociado, tipoCuenta);
+		return cuenta;
+	}
+	
+	@Override
+	public Cuenta actualizarCuenta(String numeroCuenta, double saldoCliente, String clienteAsociado, String tipoCuenta) throws ClienteException, CuentaException {
+		
+		Cuenta cuenta = banco.actualizarCuenta(numeroCuenta, saldoCliente, clienteAsociado, tipoCuenta); 	
+		return cuenta;
+	}
+	
+	@Override
+	public Boolean eliminarCuenta(String numeroCuenta) {
+		if(banco.eliminarCuenta(numeroCuenta)) {
+			return true;
+		}		
+		return false;
+	}
+
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------||
 
 	@Override
 	public void DepositarDineroCuenta(Integer numeroCuenta) {
@@ -195,6 +270,11 @@ public class ModelFactoryController implements IModelFactoryService{
 	public Empleado obtenerEmpleado(String cedula) {
 		return null;
 	}
+
+
+
+
+
 	
 	
 	

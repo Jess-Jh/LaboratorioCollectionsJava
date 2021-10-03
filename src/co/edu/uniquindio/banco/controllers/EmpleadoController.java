@@ -295,6 +295,8 @@ public class EmpleadoController implements Initializable {
 			empleadoSeleccion.setTelefono(telefono);
 			empleadoSeleccion.setCorreo(correo);
 			empleadoSeleccion.setFechaNacimiento(fechaDeNacimiento);
+			empleadoSeleccion.setCodigo(codigo);
+			empleadoSeleccion.setSalario(salarioEmpleado);
 	
 			tableViewEmpleados.refresh();		
 			bancoApplication.mostrarMensaje("Notificación Actualización Empleado", "Actualización Empleado", "El empleado " + empleado.getNombre() + " " + empleado.getApellido() 

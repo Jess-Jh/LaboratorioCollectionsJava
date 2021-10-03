@@ -49,13 +49,13 @@ public class BancoApplication extends Application {
 	public void mostrarVentanaPrincipal() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(BancoApplication.class.getResource("/co/edu/uniquindio/banco/views/EmpleadoView.fxml"));
+			loader.setLocation(BancoApplication.class.getResource("/co/edu/uniquindio/banco/views/ClienteView.fxml"));
 			AnchorPane anchorPane = (AnchorPane)loader.load();
-			EmpleadoController empleadoController = loader.getController();
-			empleadoController.setAplicacion(this);
+			ClienteController clienteController = loader.getController();
+			clienteController.setAplicacion(this);
 			
 			dialogStage = new Stage();
-			dialogStage.setTitle("Empleado");
+			dialogStage.setTitle("Cliente");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.initOwner(primaryStage);
 			
@@ -77,6 +77,27 @@ public class BancoApplication extends Application {
 			
 			dialogStage = new Stage();
 			dialogStage.setTitle("Cliente");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			
+			Scene scene = new Scene(anchorPane);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void mostrarEmpleadoView() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(BancoApplication.class.getResource("/co/edu/uniquindio/banco/views/EmpleadoView.fxml"));
+			AnchorPane anchorPane = (AnchorPane)loader.load();
+			EmpleadoController empleadoController = loader.getController();
+			empleadoController.setAplicacion(this);
+			
+			dialogStage = new Stage();
+			dialogStage.setTitle("Empleado");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.initOwner(primaryStage);
 			

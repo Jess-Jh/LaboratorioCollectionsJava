@@ -1,8 +1,10 @@
 package co.edu.uniquindio.banco.model.services;
 
 import co.edu.uniquindio.banco.exceptions.ClienteException;
+import co.edu.uniquindio.banco.exceptions.CuentaException;
 import co.edu.uniquindio.banco.exceptions.EmpleadoException;
 import co.edu.uniquindio.banco.model.Cliente;
+import co.edu.uniquindio.banco.model.Cuenta;
 import co.edu.uniquindio.banco.model.Empleado;
 
 public interface IBancoService {
@@ -26,6 +28,12 @@ public interface IBancoService {
 	public Boolean eliminarCliente(String cedula);
 
 	public Cliente obtenerCliente(String cedula);
+	
+	public Cuenta crearCuenta(String numeroCuenta, double saldo, String clienteAsociado, String tipoCuenta) throws ClienteException, CuentaException;
+	
+	public Cuenta actualizarCuenta(String numeroCuenta, double saldoCliente, String clienteAsociado, String tipoCuenta) throws ClienteException, CuentaException;
+	
+	public boolean eliminarCuenta(String numeroCuenta);
 
 	public void DepositarDineroCuenta(Integer numeroCuenta);
 
