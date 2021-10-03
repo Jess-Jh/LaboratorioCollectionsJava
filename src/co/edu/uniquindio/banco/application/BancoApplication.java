@@ -5,6 +5,7 @@ import java.io.IOException;
 import co.edu.uniquindio.banco.controllers.ClienteController;
 import co.edu.uniquindio.banco.controllers.EmpleadoController;
 import co.edu.uniquindio.banco.controllers.ModelFactoryController;
+import co.edu.uniquindio.banco.controllers.TransaccionController;
 import co.edu.uniquindio.banco.model.Banco;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -47,24 +48,7 @@ public class BancoApplication extends Application {
 	 * Cargar los archivos de la vista principal
 	 */
 	public void mostrarVentanaPrincipal() {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(BancoApplication.class.getResource("/co/edu/uniquindio/banco/views/ClienteView.fxml"));
-			AnchorPane anchorPane = (AnchorPane)loader.load();
-			ClienteController clienteController = loader.getController();
-			clienteController.setAplicacion(this);
-			
-			dialogStage = new Stage();
-			dialogStage.setTitle("Cliente");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			dialogStage.initOwner(primaryStage);
-			
-			Scene scene = new Scene(anchorPane);
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		mostrarClienteView();
 	}
 	
 	public void mostrarClienteView() {
@@ -98,6 +82,27 @@ public class BancoApplication extends Application {
 			
 			dialogStage = new Stage();
 			dialogStage.setTitle("Empleado");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			
+			Scene scene = new Scene(anchorPane);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void mostrarTransaccionView() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(BancoApplication.class.getResource("/co/edu/uniquindio/banco/views/TransaccionView.fxml"));
+			AnchorPane anchorPane = (AnchorPane)loader.load();
+			TransaccionController transaccionController = loader.getController();
+			transaccionController.setAplicacion(this);
+			
+			dialogStage = new Stage();
+			dialogStage.setTitle("Transaccion");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.initOwner(primaryStage);
 			

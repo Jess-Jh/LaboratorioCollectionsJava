@@ -72,9 +72,14 @@ public class Banco implements IBancoService, Serializable {
 	}
 
 	private boolean existeCliente(String cedula) {
-		for(Cliente cliente : listaClientes) {
-			if(cliente.getCedula().equalsIgnoreCase(cedula))
+		Cliente cliente;
+	     		
+		for( Iterator<Cliente> it = listaClientes.iterator(); it.hasNext();) { 
+			cliente = it.next();
+			
+			if (cliente.getCedula().equalsIgnoreCase(cedula)) {
 				return true;
+			}			
 		}
 		return false;
 	}
@@ -113,14 +118,16 @@ public class Banco implements IBancoService, Serializable {
 
 	@Override
 	public Cliente obtenerCliente(String cedulaCliente) {
-
-		Cliente clienteEncontrado = null;
-
-		for (Cliente cliente : getListaClientes()) {
+		
+		Cliente clienteEncontrado = null, cliente;
+				
+		for( Iterator<Cliente> it = listaClientes.iterator(); it.hasNext();) { 
+			cliente = it.next();
+			
 			if (cliente.getCedula().equalsIgnoreCase(cedulaCliente)) {
 				clienteEncontrado = cliente;
 				break;
-			}
+			}			
 		}
 		return clienteEncontrado;
 	}
@@ -188,13 +195,15 @@ public class Banco implements IBancoService, Serializable {
 	@Override
 	public Empleado obtenerEmpleado(String cedula) {
 
-		Empleado empleadoEncontrado = null;
-
-		for (Empleado empleado : getListaEmpleados()) {
+		Empleado empleadoEncontrado = null, empleado;
+		
+		for( Iterator<Empleado> it = listaEmpleados.iterator(); it.hasNext();) { 
+			empleado = it.next();
+			
 			if (empleado.getCedula().equalsIgnoreCase(cedula)) {
 				empleadoEncontrado = empleado;
 				break;
-			}
+			}			
 		}
 		return empleadoEncontrado;
 	}
@@ -241,7 +250,7 @@ public class Banco implements IBancoService, Serializable {
 			throw new ClienteException("El cliente con la cédula " + clienteAsociado + " no se encuentra registrado");
 		else if(cuenta == null)
 			throw new CuentaException("La cuenta con el número " + numeroCuenta + " no se encuentra registrada");
-		{
+		else {
 			cuenta.setNumeroCuenta(numeroCuenta);
 			cuenta.setClienteAsociado(cliente);
 			cuenta.setSaldo(saldoCliente);
@@ -273,18 +282,58 @@ public class Banco implements IBancoService, Serializable {
 	}
 
 	@Override
-	public void DepositarDineroCuenta(Integer numeroCuenta) {
+	public Transaccion DepositarDineroCuenta(double depositarDinero, String numeroCuentaBancaria, String numeroCedulaTransaccion) throws ClienteException {
+		Transaccion depositoTransaccion = null;
+		Cuenta cuenta = obtenerCuenta(numeroCuentaBancaria);
+		Cliente cliente = obtenerCliente(numeroCedulaTransaccion);
 
+		if(cliente == null) throw new ClienteException("El cliente con la cédula " + numeroCedulaTransaccion + " no se encuentra registrado");
+		
+		if(!cuenta.getClienteAsociado().getCedula().equalsIgnoreCase(numeroCedulaTransaccion)) 
+			throw new ClienteException("El cliente con la cédula " + numeroCedulaTransaccion + " no se encuentra asociado a la cuenta");
+		
+		depositoTransaccion = cuenta.validarDeposito(depositarDinero, numeroCuentaBancaria);	
+		
+		if(depositoTransaccion.getEstado().equals(EstadoTransaccion.EXITOSA)) cuenta.depositarDinero(depositarDinero);
+		
+		listaTransaccionesAsociadas.put(numeroCuentaBancaria, depositoTransaccion);
+	
+		return depositoTransaccion;
 	}
 
 	@Override
-	public void RetirarDineroCuenta(Integer cedula, Integer numeroCuenta) {
-
+	public Transaccion RetirarDineroCuenta(double dineroRetiro, String numeroCuentaBancaria, String numeroCedulaTransaccion) throws ClienteException, CuentaException {
+		Transaccion retiroTransaccion = null;
+		
+		Cuenta cuenta = obtenerCuenta(numeroCuentaBancaria);
+		
+		Cliente cliente = obtenerCliente(numeroCedulaTransaccion);
+		
+		if(cliente == null)
+			throw new ClienteException("El cliente con la cédula " + numeroCedulaTransaccion + " no se encuentra registrado");
+		else if(cuenta == null)
+			throw new CuentaException("La cuenta con el número " + numeroCuentaBancaria + " no se encuentra registrada");
+		else if(!cuenta.getClienteAsociado().getCedula().equalsIgnoreCase(numeroCedulaTransaccion)) 
+			throw new ClienteException("El cliente con la cédula " + numeroCedulaTransaccion + " no se encuentra asociado a la cuenta");
+		else {
+			retiroTransaccion = cuenta.validarTransaccion(dineroRetiro, numeroCuentaBancaria);	
+			
+			listaTransaccionesAsociadas.put(numeroCedulaTransaccion, retiroTransaccion);
+			
+			if(retiroTransaccion.getEstado().equals(EstadoTransaccion.EXITOSA)) cuenta.retirarDinero(dineroRetiro);									
+		}			
+		return retiroTransaccion;
 	}
 
 	@Override
-	public void ConsultarSaldoCuenta(Integer numeroCuenta) {
-
+	public Cuenta ConsultarSaldoCuenta(String numeroCuentaBancaria) throws CuentaException {
+		
+		Cuenta cuentaCliente = obtenerCuenta(numeroCuentaBancaria);
+		
+		if(cuentaCliente == null)
+			throw new CuentaException("La cuenta con el número " + numeroCuentaBancaria + " no se encuentra registrada");
+		
+		return cuentaCliente;
 	}
 
 	class Comparacion implements Comparator{
@@ -310,6 +359,8 @@ public class Banco implements IBancoService, Serializable {
 			return resultado;
 		}
 	}
+
+
 
 
 

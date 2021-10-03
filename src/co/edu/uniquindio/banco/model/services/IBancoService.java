@@ -6,6 +6,7 @@ import co.edu.uniquindio.banco.exceptions.EmpleadoException;
 import co.edu.uniquindio.banco.model.Cliente;
 import co.edu.uniquindio.banco.model.Cuenta;
 import co.edu.uniquindio.banco.model.Empleado;
+import co.edu.uniquindio.banco.model.Transaccion;
 
 public interface IBancoService {
 
@@ -35,12 +36,11 @@ public interface IBancoService {
 	
 	public boolean eliminarCuenta(String numeroCuenta);
 
-	public void DepositarDineroCuenta(Integer numeroCuenta);
+	public Transaccion RetirarDineroCuenta(double dineroRetiro, String numeroCuentaBancaria, String numeroCedulaTransaccion) throws ClienteException, CuentaException;
 
-	public void RetirarDineroCuenta(Integer cedula, Integer numeroCuenta);
+	public Transaccion DepositarDineroCuenta(double depositarDinero, String numeroCuentaBancaria, String numeroCedulaTransaccion) throws ClienteException;
 
-	public void ConsultarSaldoCuenta(Integer numeroCuenta);
+	public Cuenta ConsultarSaldoCuenta(String numeroCuentaBancaria) throws CuentaException;
 	
-//	public void realizarTransaccion
 
 }

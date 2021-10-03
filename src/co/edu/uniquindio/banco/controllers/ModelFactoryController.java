@@ -10,7 +10,10 @@ import co.edu.uniquindio.banco.model.Cuenta;
 import co.edu.uniquindio.banco.model.CuentaAhorro;
 import co.edu.uniquindio.banco.model.CuentaCorriente;
 import co.edu.uniquindio.banco.model.Empleado;
+import co.edu.uniquindio.banco.model.EstadoTransaccion;
 import co.edu.uniquindio.banco.model.Gerente;
+import co.edu.uniquindio.banco.model.TipoTransaccion;
+import co.edu.uniquindio.banco.model.Transaccion;
 import co.edu.uniquindio.banco.model.services.IModelFactoryService;
 
 public class ModelFactoryController implements IModelFactoryService{
@@ -37,6 +40,7 @@ public class ModelFactoryController implements IModelFactoryService{
 
 		banco = new Banco();
 		Cuenta cuenta = new CuentaAhorro();
+		Transaccion transaccion;
 		
 		Cliente cliente = new Cliente();
 		cliente.setNombre("juan");
@@ -78,6 +82,9 @@ public class ModelFactoryController implements IModelFactoryService{
 		
 		banco.getListaCuentas().put(cuenta.getNumeroCuenta(), cuenta);
 		
+		transaccion = new Transaccion(500000, TipoTransaccion.DEPOSITO, EstadoTransaccion.EXITOSA);
+		banco.getListaTransaccionesAsociadas().put(cuenta.getNumeroCuenta(), transaccion);
+				
 		cliente = new Cliente();
 		cliente.setNombre("juan");
 		cliente.setApellido("arias");
@@ -95,6 +102,9 @@ public class ModelFactoryController implements IModelFactoryService{
 		cuenta.setClienteAsociado(cliente);
 		
 		banco.getListaCuentas().put(cuenta.getNumeroCuenta(), cuenta);
+		
+		transaccion = new Transaccion(4000000, TipoTransaccion.RETIRO, EstadoTransaccion.RECHAZADA);
+		banco.getListaTransaccionesAsociadas().put(cuenta.getNumeroCuenta(), transaccion);
 
 		cliente = new Cliente();
 		cliente.setNombre("juan");
@@ -113,6 +123,8 @@ public class ModelFactoryController implements IModelFactoryService{
 		cuenta.setClienteAsociado(cliente);
 		
 		banco.getListaCuentas().put(cuenta.getNumeroCuenta(), cuenta);
+		transaccion = new Transaccion(800000, TipoTransaccion.RETIRO, EstadoTransaccion.EXITOSA);
+		banco.getListaTransaccionesAsociadas().put(cuenta.getNumeroCuenta(), transaccion);
 		
 		cliente = new Cliente();
 		cliente.setNombre("Alberto");
@@ -174,7 +186,6 @@ public class ModelFactoryController implements IModelFactoryService{
 			String correo, String fechaNacimiento, String codigo, double salarioEmpleado, String cargo) throws EmpleadoException {
 		
 		Empleado empleado = getBanco().crearEmpleado(nombre, apellido, cedula, direccion, telefono, correo, fechaNacimiento, codigo, salarioEmpleado, cargo);
-		
 		return empleado;
 	}
 
@@ -248,28 +259,39 @@ public class ModelFactoryController implements IModelFactoryService{
 		}		
 		return false;
 	}
-
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------||
 
 	@Override
-	public void DepositarDineroCuenta(Integer numeroCuenta) {
+	public Transaccion RetirarDineroCuenta(double dineroRetiro, String numeroCuentaBancaria, String numeroCedulaTransaccion) throws ClienteException, CuentaException {
 		
+		Transaccion transaccion = banco.RetirarDineroCuenta(dineroRetiro, numeroCuentaBancaria, numeroCedulaTransaccion);	
+		return transaccion;
 	}
 
 	@Override
-	public void RetirarDineroCuenta(Integer cedula, Integer numeroCuenta) {
-		
+	public Transaccion DepositarDineroCuenta(double depositarDinero, String numeroCuentaBancaria, String numeroCedulaTransaccion) throws ClienteException {
+		Transaccion transaccion = banco.DepositarDineroCuenta(depositarDinero, numeroCuentaBancaria, numeroCedulaTransaccion);	
+		return transaccion;
 	}
 
+
+
 	@Override
-	public void ConsultarSaldoCuenta(Integer numeroCuenta) {
+	public Cuenta ConsultarSaldoCuenta(String numeroCuentaBancaria) throws CuentaException {
+		Cuenta cuenta = banco.ConsultarSaldoCuenta(numeroCuentaBancaria);
 		
+		return cuenta;
 	}
 
 	@Override
 	public Empleado obtenerEmpleado(String cedula) {
 		return null;
 	}
+
+
+
+
+	
 
 
 

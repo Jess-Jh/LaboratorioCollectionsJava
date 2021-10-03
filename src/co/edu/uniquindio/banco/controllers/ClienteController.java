@@ -224,8 +224,7 @@ public class ClienteController implements Initializable {
 		return listadoClientes;
 	}
     
-    private ObservableList<Cuenta> getCuentas() {
-    	
+    private ObservableList<Cuenta> getCuentas() {	
     	HashMap<String, Cuenta> lista = banco.getListaCuentas();
     	List<Cuenta> listaCuentas = lista.values().stream().collect(Collectors.toList());
 		listadoCuentas.addAll(listaCuentas); 
@@ -253,10 +252,11 @@ public class ClienteController implements Initializable {
 			
 			if(cliente != null) listadoClientes.add(0, cliente);
 			tableViewClientes.refresh();
-			
+					
 		} catch(DatosInvalidosException | ClienteException e) {
 			bancoApplication.mostrarMensaje("Notificación Registro de Cliente", "Información registro cliente inválida", e.getMessage(), AlertType.WARNING);			
 		}
+		nuevoCliente();
 	}
 
 	private boolean verificarDatos(String nombre, String apellidos, String cedula, String direccion, String telefono, String correo, String fechaDeNacimiento ) throws DatosInvalidosException {
@@ -305,12 +305,13 @@ public class ClienteController implements Initializable {
 			clienteSeleccion.setCorreo(correo);
 			clienteSeleccion.setFechaNacimiento(fechaDeNacimiento);
 	
-			tableViewClientes.refresh();		
+			tableViewClientes.refresh();	
 			bancoApplication.mostrarMensaje("Notificación Actualización Cliente", "Actualización Cliente", "El cliente " + cliente.getNombre() + " " + cliente.getApellido() 
 											   + " se ha actualizado con éxito", AlertType.CONFIRMATION);	
 		} catch (DatosInvalidosException e) {
 			bancoApplication.mostrarMensaje("Notificación Actualización Cliente", "Actualización Cliente", e.getMessage(), AlertType.WARNING);
 		}
+    	nuevoCliente();
 	}
 
 	@FXML
@@ -332,7 +333,21 @@ public class ClienteController implements Initializable {
 		} else {
 			bancoApplication.mostrarMensaje("Notificación eliminación cliente", "Eliminación Cliente", "No se ha seleccionado ninguna cliente", AlertType.WARNING);
 		}
+		nuevoCliente();		
     }
+	
+	/**
+	 * Limpiar campos para ingresar un nuevo cliente
+	 */
+	private void nuevoCliente() {
+		txtNombre.setText("");
+		txtApellidos.setText("");
+		txtCedula.setText("");
+		txtDireccion.setText("");
+		txtTelefono.setText("");
+		txtCorreo.setText("");
+		txtFechaDeNacimiento.setText("");		
+	}
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||
 	
     //--------------------------------------------------------- CRUD Cuenta ------------------------------------------------------------------------------------------------->>
@@ -355,11 +370,11 @@ public class ClienteController implements Initializable {
 			
 			bancoApplication.mostrarMensaje("Registro Cuenta", "Registro Cuenta", "La cuenta " + cuenta.getNumeroCuenta() + "  ha sido registrada con éxito", AlertType.INFORMATION); 					
 			
-			nuevaCuenta();
 		
 		} catch (DatosInvalidosException | ClienteException | CuentaException e) {
 			bancoApplication.mostrarMensaje("Notificación Registro Cuenta", "Información registro cuenta inválida", e.getMessage(), AlertType.WARNING);			
 		}
+		nuevaCuenta();
 	}
 
 	private void nuevaCuenta() {
@@ -430,8 +445,8 @@ public class ClienteController implements Initializable {
 
 		} catch (DatosInvalidosException | ClienteException | CuentaException e) {
 			bancoApplication.mostrarMensaje("Notificación Actualización Cuenta", "Información actualización cuenta inválida", e.getMessage(), AlertType.WARNING);			
-			
 		}
+		nuevaCuenta();
 	}
 
 	@FXML
@@ -453,7 +468,11 @@ public class ClienteController implements Initializable {
 		} else {
 			bancoApplication.mostrarMensaje("Notificación eliminación cuenta", "Eliminación Cuenta", "No se ha seleccionado ninguna cuenta", AlertType.WARNING);
 		}
+		nuevaCuenta();
     }
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------||
+	
+
 
 
 }

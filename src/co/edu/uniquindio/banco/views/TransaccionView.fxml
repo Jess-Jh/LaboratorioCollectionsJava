@@ -1,8 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1">
-	<!-- TODO Add Nodes -->
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="co.edu.uniquindio.banco.controllers.TransaccionController">
+   <children>
+      <AnchorPane prefHeight="461.0" prefWidth="681.0">
+         <children>
+            <TabPane layoutX="7.0" layoutY="4.0" prefHeight="449.0" prefWidth="669.0" tabClosingPolicy="UNAVAILABLE">
+               <tabs>
+                  <Tab text="Gestión Transacción">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="659.0">
+                           <children>
+                              <AnchorPane layoutX="7.0" layoutY="7.0" prefHeight="412.0" prefWidth="655.0">
+                                 <children>
+                                    <SplitPane dividerPositions="0.5972222222222222" layoutX="5.0" layoutY="33.0" orientation="VERTICAL" prefHeight="362.0" prefWidth="643.0">
+                                       <items>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="194.0" prefWidth="621.0">
+                                             <children>
+                                                <Label layoutX="28.0" layoutY="14.0" text="Retirar Dinero">
+                                                   <font>
+                                                      <Font name="System Bold" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="28.0" layoutY="89.0" text="Depositar Dinero">
+                                                   <font>
+                                                      <Font name="System Bold" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="28.0" layoutY="112.0" text="Ingrese la cantidad a depositar:" />
+                                                <TextField fx:id="txtDepositarDinero" layoutX="200.0" layoutY="108.0" prefHeight="25.0" prefWidth="364.0" />
+                                                <Label layoutX="29.0" layoutY="179.0" text="Solicitar Saldo">
+                                                   <font>
+                                                      <Font name="System Bold" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label layoutX="28.0" layoutY="33.0" text="Ingrese la cantidad a retirar: " />
+                                                <TextField fx:id="txtRetirarDinero" layoutX="200.0" layoutY="29.0" prefHeight="25.0" prefWidth="364.0" />
+                                                <Separator layoutX="4.0" layoutY="71.0" prefHeight="4.0" prefWidth="633.0" />
+                                                <Separator layoutY="150.0" prefHeight="9.0" prefWidth="639.0" />
+                                                <RadioButton fx:id="rdBtnRetirarDinero" layoutX="576.0" layoutY="33.0" mnemonicParsing="false">
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="tipoTransaccion" />
+                                                   </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton fx:id="rdBtnDepositarDinero" layoutX="576.0" layoutY="109.0" mnemonicParsing="false" toggleGroup="$tipoTransaccion" />
+                                                <RadioButton fx:id="rdBtnSolicitarSaldo" layoutX="577.0" layoutY="180.0" mnemonicParsing="false" toggleGroup="$tipoTransaccion" />
+                                             </children>
+                                          </AnchorPane>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="147.0" prefWidth="627.0">
+                                             <children>
+                                                <Label layoutX="330.0" layoutY="21.0" text="Ingrese el número de la cuenta bancaria">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="txtNumeroCuentaBancaria" layoutX="341.0" layoutY="53.0" prefHeight="25.0" prefWidth="258.0" />
+                                                <Button fx:id="btnRegistrarTransaccion" layoutX="187.0" layoutY="101.0" mnemonicParsing="false" onAction="#registrarTransaccion" prefHeight="25.0" prefWidth="247.0" text="Registrar Transacción" />
+                                                <Label layoutX="57.0" layoutY="21.0" text="Ingrese el número de la cédula">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="txtCedulaTransaccion" layoutX="37.0" layoutY="53.0" prefHeight="25.0" prefWidth="258.0" promptText="Número de la cédula asociada a la cuenta" />
+                                             </children>
+                                          </AnchorPane>
+                                       </items>
+                                    </SplitPane>
+                                    <Label layoutX="223.0" layoutY="-1.0" text="Gestión Transacción">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Listado Transacciones">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <AnchorPane layoutX="6.0" layoutY="9.0" prefHeight="405.0" prefWidth="644.0">
+                                 <children>
+                                    <Label layoutX="221.0" text="Registro Transacciones">
+                                       <font>
+                                          <Font name="System Bold" size="19.0" />
+                                       </font>
+                                    </Label>
+                                    <TableView fx:id="tableViewTransacciones" layoutX="5.0" layoutY="35.0" prefHeight="318.0" prefWidth="636.0">
+                                       <columns>
+                                          <TableColumn fx:id="columnValor" prefWidth="88.0" text="Valor" />
+                                          <TableColumn fx:id="columnHora" prefWidth="95.0" text="Hora" />
+                                          <TableColumn fx:id="columnFecha" prefWidth="131.0" text="Fecha" />
+                                          <TableColumn fx:id="columnTipoTransaccion" prefWidth="173.0" text="Tipo de Transacción" />
+                                          <TableColumn fx:id="columnEstadoTransaccion" prefWidth="148.0" text="Estado de la Transacción" />
+                                       </columns>
+                                    </TableView>
+                                    <Button fx:id="btnCerrar" layoutX="189.0" layoutY="366.0" mnemonicParsing="false" onAction="#cerrarTransaccion" prefHeight="25.0" prefWidth="267.0" text="Cerrar " />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+         </children>
+      </AnchorPane>
+   </children>
 </AnchorPane>
-
